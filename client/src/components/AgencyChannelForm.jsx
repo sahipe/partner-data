@@ -8,7 +8,7 @@ const AgencyChannelForm = () => {
   const initialState = {
     employeeName: "",
     designation: "",
-    dateTime: new Date(), // use Date object for DatePicker
+    dateTime: new Date(), // keep Date object
     numberOfPartnerMeet: "",
     motorLoginPremium: "",
     healthLoginPremium: "",
@@ -72,22 +72,28 @@ const AgencyChannelForm = () => {
         async (position) => {
           const { latitude, longitude } = position.coords;
 
-          // format according to region (India)
-          const formattedDateTime = form.dateTime.toLocaleString("en-IN", {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: true,
-          });
-
+          // ✅ ensure numeric fields are numbers
+          const numericFields = [
+            "numberOfPartnerMeet",
+            "motorLoginPremium",
+            "healthLoginPremium",
+            "liLoginPremium",
+            "numberOfFscOnboarding",
+            "numberOfFileLogin",
+            "mutualFund",
+            "numberOfSip",
+            "insurancePremium",
+          ];
           const finalData = {
             ...form,
             latitude,
             longitude,
-            dateTime: formattedDateTime, // <-- send regional format
+            dateTime: form.dateTime.toISOString(), // send ISO string
           };
+
+          numericFields.forEach((field) => {
+            finalData[field] = form[field] === "" ? 0 : Number(form[field]);
+          });
 
           try {
             const res = await axios.post(
