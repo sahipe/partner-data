@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import axios from "axios";
 import validator from "validator";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const AgencyChannelForm = () => {
   const initialState = {
     employeeName: "",
     designation: "",
-    dateTime: new Date().toISOString(),
+    dateTime: new Date(), // use Date object for DatePicker
     numberOfPartnerMeet: "",
     motorLoginPremium: "",
     healthLoginPremium: "",
@@ -70,16 +72,26 @@ const AgencyChannelForm = () => {
         async (position) => {
           const { latitude, longitude } = position.coords;
 
+          // format according to region (India)
+          const formattedDateTime = form.dateTime.toLocaleString("en-IN", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
+          });
+
           const finalData = {
             ...form,
             latitude,
             longitude,
-            dateTime: new Date().toISOString(),
+            dateTime: formattedDateTime, // <-- send regional format
           };
 
           try {
             const res = await axios.post(
-              "https://partner-data.onrender.com/api/agency-channel", // 🔗 your backend endpoint
+              "https://partner-data.onrender.com/api/agency",
               finalData
             );
             alert("Agency Channel form submitted successfully!");
@@ -114,62 +126,79 @@ const AgencyChannelForm = () => {
           Agency Channel Form
         </h2>
 
+        {/* Employee Name */}
+        <input
+          type="text"
+          name="employeeName"
+          value={form.employeeName}
+          onChange={handleChange}
+          placeholder="Employee Name"
+          className={`border rounded-lg p-3 w-full shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
+            errors.employeeName ? "border-red-500" : "border-gray-300"
+          }`}
+        />
+        {errors.employeeName && (
+          <p className="text-red-500 text-sm mt-1">{errors.employeeName}</p>
+        )}
+
+        {/* Designation */}
+        <input
+          type="text"
+          name="designation"
+          value={form.designation}
+          onChange={handleChange}
+          placeholder="Designation"
+          className={`border rounded-lg p-3 w-full shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
+            errors.designation ? "border-red-500" : "border-gray-300"
+          }`}
+        />
+        {errors.designation && (
+          <p className="text-red-500 text-sm mt-1">{errors.designation}</p>
+        )}
+
+        {/* Date Picker */}
+        <div>
+          <label className="block mb-2 text-gray-700 font-medium">
+            Visiting Date & Time
+          </label>
+          <DatePicker
+            selected={form.dateTime}
+            onChange={(date) =>
+              setForm((prev) => ({ ...prev, dateTime: date }))
+            }
+            showTimeSelect
+            dateFormat="dd/MM/yyyy, hh:mm a"
+            className="border rounded-lg p-3 w-full shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500"
+          />
+        </div>
+
+        {/* Other Fields */}
         {[
-          { name: "employeeName", placeholder: "Employee Name" },
-          { name: "designation", placeholder: "Designation" },
           {
             name: "numberOfPartnerMeet",
             placeholder: "Number of Partner Meet",
-            type: "number",
           },
-          {
-            name: "motorLoginPremium",
-            placeholder: "Motor Login Premium",
-            type: "number",
-          },
-          {
-            name: "healthLoginPremium",
-            placeholder: "Health Login Premium",
-            type: "number",
-          },
-          {
-            name: "liLoginPremium",
-            placeholder: "LI Login Premium",
-            type: "number",
-          },
+          { name: "motorLoginPremium", placeholder: "Motor Login Premium" },
+          { name: "healthLoginPremium", placeholder: "Health Login Premium" },
+          { name: "liLoginPremium", placeholder: "LI Login Premium" },
           {
             name: "numberOfFscOnboarding",
             placeholder: "Number of FSC Onboarding",
-            type: "number",
           },
-          {
-            name: "numberOfFileLogin",
-            placeholder: "Number of File Login",
-            type: "number",
-          },
-          { name: "mutualFund", placeholder: "Mutual Fund", type: "number" },
-          { name: "numberOfSip", placeholder: "Number of SIP", type: "number" },
-          {
-            name: "insurancePremium",
-            placeholder: "Insurance Premium",
-            type: "number",
-          },
+          { name: "numberOfFileLogin", placeholder: "Number of File Login" },
+          { name: "mutualFund", placeholder: "Mutual Fund" },
+          { name: "numberOfSip", placeholder: "Number of SIP" },
+          { name: "insurancePremium", placeholder: "Insurance Premium" },
         ].map((field) => (
-          <div key={field.name}>
-            <input
-              type={field.type || "text"}
-              name={field.name}
-              value={form[field.name]}
-              onChange={handleChange}
-              placeholder={field.placeholder}
-              className={`border rounded-lg p-3 w-full shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
-                errors[field.name] ? "border-red-500" : "border-gray-300"
-              }`}
-            />
-            {errors[field.name] && (
-              <p className="text-red-500 text-sm mt-1">{errors[field.name]}</p>
-            )}
-          </div>
+          <input
+            key={field.name}
+            type="number"
+            name={field.name}
+            value={form[field.name]}
+            onChange={handleChange}
+            placeholder={field.placeholder}
+            className="border rounded-lg p-3 w-full shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500"
+          />
         ))}
 
         <button

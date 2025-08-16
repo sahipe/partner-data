@@ -105,6 +105,9 @@ const PartnerForm = () => {
     if (!form.retailerImage) {
       newErrors.retailerImage = "Retailer image is required";
     }
+    if (validator.isEmpty(form.visitingDateTime.trim())) {
+      newErrors.visitingDateTime = "Visiting Date & Time is required";
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -215,6 +218,24 @@ const PartnerForm = () => {
             )}
           </div>
         ))}
+
+        {/* Visiting Date & Time */}
+        <div>
+          <input
+            type="datetime-local"
+            name="visitingDateTime"
+            value={form.visitingDateTime}
+            onChange={handleChange}
+            className={`border rounded-lg p-3 w-full shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+              errors.visitingDateTime ? "border-red-500" : "border-gray-300"
+            }`}
+          />
+          {errors.visitingDateTime && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.visitingDateTime}
+            </p>
+          )}
+        </div>
 
         {/* Onboarding Status */}
         <div>

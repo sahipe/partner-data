@@ -1,6 +1,9 @@
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc.js";
+import timezone from "dayjs/plugin/timezone.js";
 import XLSX from "xlsx";
 import Partner from "./models/partnerModel.js";
 import AgencyChannel from "./models/agencyChannel.js";
@@ -8,6 +11,9 @@ import AgencyChannel from "./models/agencyChannel.js";
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 // MongoDB Connection
 mongoose
@@ -44,7 +50,9 @@ app.get("/api/partners/excel", async (req, res) => {
     const formattedData = partners.map((p) => ({
       "Employee Name": p.employeeName,
       "Date & Time": p.visitingDateTime
-        ? new Date(p.visitingDateTime).toLocaleString()
+        ? dayjs(p.visitingDateTime)
+            .tz("Asia/Kolkata")
+            .format("DD-MM-YYYY hh:mm A")
         : "",
       "Partner Name": p.partnerName,
       "Partner Contact": p.partnerContactNumber,

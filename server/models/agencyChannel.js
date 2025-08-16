@@ -15,6 +15,7 @@ const agencyChannelSchema = new mongoose.Schema(
     mutualFund: { type: Number, default: 0 },
     numberOfSip: { type: Number, default: 0 },
     insurancePremium: { type: Number, default: 0 },
+    visitingDateTime: { type: String, required: true },
     latitude: { type: Number },
     longitude: { type: Number },
   },
