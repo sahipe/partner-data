@@ -128,7 +128,11 @@ app.get("/api/agency/excel", async (req, res) => {
     const formattedData = agencyData.map((a) => ({
       "Employee Name": a.employeeName,
       Designation: a.designation,
-      "Date & Time": a.dateTime ? new Date(a.dateTime).toLocaleString() : "",
+      "Date & Time": p.visitingDateTime
+        ? dayjs(p.visitingDateTime)
+            .tz("Asia/Kolkata")
+            .format("DD-MM-YYYY hh:mm A")
+        : "",
       "Number of Partner Meet": a.numberOfPartnerMeet,
       "Motor Login Premium": a.motorLoginPremium,
       "Health Login Premium": a.healthLoginPremium,
