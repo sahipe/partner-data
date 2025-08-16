@@ -10,13 +10,8 @@ const AgencyChannelForm = () => {
     designation: "",
     dateTime: new Date(), // keep Date object
     numberOfPartnerMeet: "",
-    motorLoginPremium: "",
-    healthLoginPremium: "",
-    liLoginPremium: "",
-    numberOfFscOnboarding: "",
-    numberOfFileLogin: "",
-    mutualFund: "",
-    numberOfSip: "",
+    numberOfFsc: "",
+    sipMp: "",
     insurancePremium: "",
     latitude: "",
     longitude: "",
@@ -31,13 +26,8 @@ const AgencyChannelForm = () => {
 
     const numericFields = [
       "numberOfPartnerMeet",
-      "motorLoginPremium",
-      "healthLoginPremium",
-      "liLoginPremium",
-      "numberOfFscOnboarding",
-      "numberOfFileLogin",
-      "mutualFund",
-      "numberOfSip",
+      "numberOfFsc",
+      "sipMp",
       "insurancePremium",
     ];
 
@@ -72,23 +62,18 @@ const AgencyChannelForm = () => {
         async (position) => {
           const { latitude, longitude } = position.coords;
 
-          // ✅ ensure numeric fields are numbers
           const numericFields = [
             "numberOfPartnerMeet",
-            "motorLoginPremium",
-            "healthLoginPremium",
-            "liLoginPremium",
-            "numberOfFscOnboarding",
-            "numberOfFileLogin",
-            "mutualFund",
-            "numberOfSip",
+            "numberOfFsc",
+            "sipMp",
             "insurancePremium",
           ];
+
           const finalData = {
             ...form,
             latitude,
             longitude,
-            dateTime: form.dateTime.toISOString(), // send ISO string
+            dateTime: form.dateTime.toISOString(),
           };
 
           numericFields.forEach((field) => {
@@ -133,34 +118,42 @@ const AgencyChannelForm = () => {
         </h2>
 
         {/* Employee Name */}
-        <input
-          type="text"
-          name="employeeName"
-          value={form.employeeName}
-          onChange={handleChange}
-          placeholder="Employee Name"
-          className={`border rounded-lg p-3 w-full shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
-            errors.employeeName ? "border-red-500" : "border-gray-300"
-          }`}
-        />
-        {errors.employeeName && (
-          <p className="text-red-500 text-sm mt-1">{errors.employeeName}</p>
-        )}
+        <div>
+          <label className="block mb-2 text-gray-700 font-medium">
+            Employee Name
+          </label>
+          <input
+            type="text"
+            name="employeeName"
+            value={form.employeeName}
+            onChange={handleChange}
+            className={`border rounded-lg p-3 w-full shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
+              errors.employeeName ? "border-red-500" : "border-gray-300"
+            }`}
+          />
+          {errors.employeeName && (
+            <p className="text-red-500 text-sm mt-1">{errors.employeeName}</p>
+          )}
+        </div>
 
         {/* Designation */}
-        <input
-          type="text"
-          name="designation"
-          value={form.designation}
-          onChange={handleChange}
-          placeholder="Designation"
-          className={`border rounded-lg p-3 w-full shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
-            errors.designation ? "border-red-500" : "border-gray-300"
-          }`}
-        />
-        {errors.designation && (
-          <p className="text-red-500 text-sm mt-1">{errors.designation}</p>
-        )}
+        <div>
+          <label className="block mb-2 text-gray-700 font-medium">
+            Designation
+          </label>
+          <input
+            type="text"
+            name="designation"
+            value={form.designation}
+            onChange={handleChange}
+            className={`border rounded-lg p-3 w-full shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
+              errors.designation ? "border-red-500" : "border-gray-300"
+            }`}
+          />
+          {errors.designation && (
+            <p className="text-red-500 text-sm mt-1">{errors.designation}</p>
+          )}
+        </div>
 
         {/* Date Picker */}
         <div>
@@ -178,35 +171,58 @@ const AgencyChannelForm = () => {
           />
         </div>
 
-        {/* Other Fields */}
-        {[
-          {
-            name: "numberOfPartnerMeet",
-            placeholder: "Number of Partner Meet",
-          },
-          { name: "motorLoginPremium", placeholder: "Motor Login Premium" },
-          { name: "healthLoginPremium", placeholder: "Health Login Premium" },
-          { name: "liLoginPremium", placeholder: "LI Login Premium" },
-          {
-            name: "numberOfFscOnboarding",
-            placeholder: "Number of FSC Onboarding",
-          },
-          { name: "numberOfFileLogin", placeholder: "Number of File Login" },
-          { name: "mutualFund", placeholder: "Mutual Fund" },
-          { name: "numberOfSip", placeholder: "Number of SIP" },
-          { name: "insurancePremium", placeholder: "Insurance Premium" },
-        ].map((field) => (
+        {/* Numeric Fields */}
+        <div>
+          <label className="block mb-2 text-gray-700 font-medium">
+            Number of Partner Meet
+          </label>
           <input
-            key={field.name}
             type="number"
-            name={field.name}
-            value={form[field.name]}
+            name="numberOfPartnerMeet"
+            value={form.numberOfPartnerMeet}
             onChange={handleChange}
-            placeholder={field.placeholder}
             className="border rounded-lg p-3 w-full shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500"
           />
-        ))}
+        </div>
 
+        <div>
+          <label className="block mb-2 text-gray-700 font-medium">
+            Number of FSC
+          </label>
+          <input
+            type="number"
+            name="numberOfFsc"
+            value={form.numberOfFsc}
+            onChange={handleChange}
+            className="border rounded-lg p-3 w-full shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500"
+          />
+        </div>
+
+        <div>
+          <label className="block mb-2 text-gray-700 font-medium">SIP/MP</label>
+          <input
+            type="number"
+            name="sipMp"
+            value={form.sipMp}
+            onChange={handleChange}
+            className="border rounded-lg p-3 w-full shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500"
+          />
+        </div>
+
+        <div>
+          <label className="block mb-2 text-gray-700 font-medium">
+            Insurance Premium
+          </label>
+          <input
+            type="number"
+            name="insurancePremium"
+            value={form.insurancePremium}
+            onChange={handleChange}
+            className="border rounded-lg p-3 w-full shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500"
+          />
+        </div>
+
+        {/* Submit Button */}
         <button
           type="submit"
           disabled={loading}

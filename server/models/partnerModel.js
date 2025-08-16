@@ -5,9 +5,9 @@ const partnerSchema = new mongoose.Schema(
   {
     employeeName: { type: String, required: true },
     partnerName: { type: String, required: true },
-    partnerContactNumber: { type: String, required: true },
+    partnerContactNumber: { type: String, required: true, unique: true },
     partnerEmail: { type: String, required: true },
-    shopName: { type: String, required: true },
+    employmentType: { type: String, required: true },
     cityVillage: { type: String, required: true },
     tehsil: { type: String },
     district: { type: String, required: true },

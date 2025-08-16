@@ -11,7 +11,7 @@ const PartnerForm = () => {
     partnerName: "",
     partnerContactNumber: "",
     partnerEmail: "",
-    shopName: "",
+    employmentType: "",
     cityVillage: "",
     tehsil: "",
     district: "",
@@ -30,29 +30,24 @@ const PartnerForm = () => {
 
   const fileInputRef = useRef(null);
 
-  // ✅ Handle field changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  // 📸 Capture + Upload to Cloudinary
   const handleCapture = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
     try {
       setUploading(true);
-
       const options = {
         maxSizeMB: 2,
         maxWidthOrHeight: 1920,
         useWebWorker: true,
       };
-
       const compressedFile = await imageCompression(file, options);
       const url = await uploadImageToCloudinary(compressedFile);
-
       setForm((prev) => ({ ...prev, retailerImage: url }));
     } catch (error) {
       console.error("Image upload failed:", error);
@@ -62,46 +57,35 @@ const PartnerForm = () => {
     }
   };
 
-  // ✅ Validation
   const validateForm = () => {
     const newErrors = {};
-
     if (validator.isEmpty(form.employeeName.trim())) {
       newErrors.employeeName = "Employee Name is required";
     }
-
     if (validator.isEmpty(form.partnerName.trim())) {
       newErrors.partnerName = "Partner Name is required";
     }
-
     if (!validator.isMobilePhone(form.partnerContactNumber, "en-IN")) {
       newErrors.partnerContactNumber = "Enter a valid 10-digit contact number";
     }
-
     if (!validator.isEmail(form.partnerEmail)) {
       newErrors.partnerEmail = "Enter a valid email address";
     }
-
-    if (validator.isEmpty(form.shopName.trim())) {
-      newErrors.shopName = "Shop Name is required";
+    if (validator.isEmpty(form.employmentType.trim())) {
+      newErrors.employmentType = "Employment Type is required";
     }
-
     if (validator.isEmpty(form.cityVillage.trim())) {
       newErrors.cityVillage = "City/Village is required";
     }
-
     if (validator.isEmpty(form.district.trim())) {
       newErrors.district = "District is required";
     }
-
     if (validator.isEmpty(form.state.trim())) {
       newErrors.state = "State is required";
     }
-
     if (validator.isEmpty(form.onboardingStatus.trim())) {
       newErrors.onboardingStatus = "Onboarding Status is required";
     }
-
     if (!form.retailerImage) {
       newErrors.retailerImage = "Retailer image is required";
     }
@@ -113,10 +97,8 @@ const PartnerForm = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  // 📍 Submit with Location
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!validateForm()) return;
 
     if (!("geolocation" in navigator)) {
@@ -127,7 +109,6 @@ const PartnerForm = () => {
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const { latitude, longitude } = position.coords;
-
         const finalData = {
           ...form,
           latitude,
@@ -137,16 +118,12 @@ const PartnerForm = () => {
 
         try {
           setSubmitting(true);
-
           const res = await axios.post(
             "https://partner-data.onrender.com/api/partners",
             finalData
           );
-
           alert("Form submitted successfully!");
           console.log("Saved response:", res.data);
-
-          // ✅ Reset form after submission
           setForm(initialState);
           setErrors({});
         } catch (error) {
@@ -175,11 +152,11 @@ const PartnerForm = () => {
 
         {/* Employee Name */}
         <div>
+          <label className="block text-gray-700 mb-1">Employee Name</label>
           <input
             name="employeeName"
             value={form.employeeName}
             onChange={handleChange}
-            placeholder="Employee Name"
             className={`border rounded-lg p-3 w-full shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
               errors.employeeName ? "border-red-500" : "border-gray-300"
             }`}
@@ -189,38 +166,142 @@ const PartnerForm = () => {
           )}
         </div>
 
-        {/* Other Input Fields */}
-        {[
-          { name: "partnerName", placeholder: "Partner Name" },
-          {
-            name: "partnerContactNumber",
-            placeholder: "Partner Contact Number",
-          },
-          { name: "partnerEmail", placeholder: "Partner Email ID" },
-          { name: "shopName", placeholder: "Shop Name" },
-          { name: "cityVillage", placeholder: "City/Village" },
-          { name: "tehsil", placeholder: "Tehsil (Optional)" },
-          { name: "district", placeholder: "District" },
-          { name: "state", placeholder: "State" },
-        ].map((field) => (
-          <div key={field.name}>
-            <input
-              name={field.name}
-              value={form[field.name]}
-              onChange={handleChange}
-              placeholder={field.placeholder}
-              className={`border rounded-lg p-3 w-full shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
-                errors[field.name] ? "border-red-500" : "border-gray-300"
-              }`}
-            />
-            {errors[field.name] && (
-              <p className="text-red-500 text-sm mt-1">{errors[field.name]}</p>
-            )}
-          </div>
-        ))}
+        {/* Partner Name */}
+        <div>
+          <label className="block text-gray-700 mb-1">Partner Name</label>
+          <input
+            name="partnerName"
+            value={form.partnerName}
+            onChange={handleChange}
+            className={`border rounded-lg p-3 w-full shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+              errors.partnerName ? "border-red-500" : "border-gray-300"
+            }`}
+          />
+          {errors.partnerName && (
+            <p className="text-red-500 text-sm mt-1">{errors.partnerName}</p>
+          )}
+        </div>
+
+        {/* Contact Number */}
+        <div>
+          <label className="block text-gray-700 mb-1">
+            Partner Contact Number
+          </label>
+          <input
+            name="partnerContactNumber"
+            value={form.partnerContactNumber}
+            onChange={handleChange}
+            className={`border rounded-lg p-3 w-full shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+              errors.partnerContactNumber ? "border-red-500" : "border-gray-300"
+            }`}
+          />
+          {errors.partnerContactNumber && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.partnerContactNumber}
+            </p>
+          )}
+        </div>
+
+        {/* Email */}
+        <div>
+          <label className="block text-gray-700 mb-1">Partner Email</label>
+          <input
+            name="partnerEmail"
+            value={form.partnerEmail}
+            onChange={handleChange}
+            className={`border rounded-lg p-3 w-full shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+              errors.partnerEmail ? "border-red-500" : "border-gray-300"
+            }`}
+          />
+          {errors.partnerEmail && (
+            <p className="text-red-500 text-sm mt-1">{errors.partnerEmail}</p>
+          )}
+        </div>
+
+        {/* Employment Type Dropdown */}
+        <div>
+          <label className="block text-gray-700 mb-1">Employment Type</label>
+          <select
+            name="employmentType"
+            value={form.employmentType}
+            onChange={handleChange}
+            className={`border rounded-lg p-3 w-full shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+              errors.employmentType ? "border-red-500" : "border-gray-300"
+            }`}
+          >
+            <option value="">Select Employment Type</option>
+            <option value="Salaried">Salaried</option>
+            <option value="Self-Employed">Self-Employed</option>
+          </select>
+          {errors.employmentType && (
+            <p className="text-red-500 text-sm mt-1">{errors.employmentType}</p>
+          )}
+        </div>
+
+        {/* City/Village */}
+        <div>
+          <label className="block text-gray-700 mb-1">City/Village</label>
+          <input
+            name="cityVillage"
+            value={form.cityVillage}
+            onChange={handleChange}
+            className={`border rounded-lg p-3 w-full shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+              errors.cityVillage ? "border-red-500" : "border-gray-300"
+            }`}
+          />
+          {errors.cityVillage && (
+            <p className="text-red-500 text-sm mt-1">{errors.cityVillage}</p>
+          )}
+        </div>
+
+        {/* Tehsil */}
+        <div>
+          <label className="block text-gray-700 mb-1">Tehsil (Optional)</label>
+          <input
+            name="tehsil"
+            value={form.tehsil}
+            onChange={handleChange}
+            className="border rounded-lg p-3 w-full shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 border-gray-300"
+          />
+        </div>
+
+        {/* District */}
+        <div>
+          <label className="block text-gray-700 mb-1">District</label>
+          <input
+            name="district"
+            value={form.district}
+            onChange={handleChange}
+            className={`border rounded-lg p-3 w-full shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+              errors.district ? "border-red-500" : "border-gray-300"
+            }`}
+          />
+          {errors.district && (
+            <p className="text-red-500 text-sm mt-1">{errors.district}</p>
+          )}
+        </div>
+
+        {/* State */}
+        <div>
+          <label className="block text-gray-700 mb-1">State</label>
+          <input
+            name="state"
+            value={form.state}
+            onChange={handleChange}
+            className={`border rounded-lg p-3 w-full shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+              errors.state ? "border-red-500" : "border-gray-300"
+            }`}
+          />
+          {errors.state && (
+            <p className="text-red-500 text-sm mt-1">{errors.state}</p>
+          )}
+        </div>
 
         {/* Visiting Date & Time */}
         <div>
+          <label className="block text-gray-700 mb-1">
+            Visiting Date & Time
+          </label>
           <input
             type="datetime-local"
             name="visitingDateTime"
@@ -239,6 +320,7 @@ const PartnerForm = () => {
 
         {/* Onboarding Status */}
         <div>
+          <label className="block text-gray-700 mb-1">Onboarding Status</label>
           <select
             name="onboardingStatus"
             value={form.onboardingStatus}
@@ -260,6 +342,7 @@ const PartnerForm = () => {
 
         {/* Camera Capture */}
         <div className="flex flex-col items-center">
+          <label className="block text-gray-700 mb-2">Retailer Image</label>
           <input
             type="file"
             accept="image/*"
@@ -279,11 +362,9 @@ const PartnerForm = () => {
           {errors.retailerImage && (
             <p className="text-red-500 text-sm mt-2">{errors.retailerImage}</p>
           )}
-
           {uploading && (
             <p className="text-indigo-500 mt-2">Uploading image...</p>
           )}
-
           {form.retailerImage && !uploading && (
             <img
               src={form.retailerImage}
