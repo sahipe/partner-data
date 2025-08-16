@@ -128,8 +128,8 @@ app.get("/api/agency/excel", async (req, res) => {
     const formattedData = agencyData.map((a) => ({
       "Employee Name": a.employeeName,
       Designation: a.designation,
-      "Date & Time": p.visitingDateTime
-        ? dayjs(p.visitingDateTime)
+      "Date & Time": a.visitingDateTime
+        ? dayjs(a.visitingDateTime)
             .tz("Asia/Kolkata")
             .format("DD-MM-YYYY hh:mm A")
         : "",
