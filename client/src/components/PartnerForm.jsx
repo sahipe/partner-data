@@ -136,7 +136,7 @@ const PartnerForm = () => {
           setSubmitting(true);
 
           const res = await axios.post(
-            "http://localhost:5000/api/partners",
+            "https://partner-data.onrender.com/api/partners",
             finalData
           );
 

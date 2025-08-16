@@ -51,8 +51,8 @@ const ExcelDownload = () => {
       // API URL based on type selection
       const url =
         type === "partner"
-          ? "http://localhost:5000/api/partners/excel"
-          : "http://localhost:5000/api/agency/excel";
+          ? "https://partner-data.onrender.com/api/partners/excel"
+          : "https://partner-data.onrender.com/api/agency/excel";
 
       const res = await axios.get(url, {
         params,

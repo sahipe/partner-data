@@ -79,7 +79,7 @@ const AgencyChannelForm = () => {
 
           try {
             const res = await axios.post(
-              "http://localhost:5000/api/agency-channel", // 🔗 your backend endpoint
+              "https://partner-data.onrender.com/api/agency-channel", // 🔗 your backend endpoint
               finalData
             );
             alert("Agency Channel form submitted successfully!");
