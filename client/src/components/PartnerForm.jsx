@@ -87,7 +87,7 @@ const PartnerForm = () => {
       newErrors.onboardingStatus = "Onboarding Status is required";
     }
     if (!form.retailerImage) {
-      newErrors.retailerImage = "Retailer image is required";
+      newErrors.retailerImage = "Image is required";
     }
     if (validator.isEmpty(form.visitingDateTime.trim())) {
       newErrors.visitingDateTime = "Visiting Date & Time is required";
@@ -342,7 +342,7 @@ const PartnerForm = () => {
 
         {/* Camera Capture */}
         <div className="flex flex-col items-center">
-          <label className="block text-gray-700 mb-2">Retailer Image</label>
+          <label className="block text-gray-700 mb-2">Partner Image</label>
           <input
             type="file"
             accept="image/*"
@@ -368,7 +368,7 @@ const PartnerForm = () => {
           {form.retailerImage && !uploading && (
             <img
               src={form.retailerImage}
-              alt="Retailer"
+              alt="Partner image"
               className="w-32 h-32 object-cover mt-3 rounded-lg border"
             />
           )}
