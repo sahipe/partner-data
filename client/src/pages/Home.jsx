@@ -41,7 +41,7 @@ const Home = () => {
             onClick={() => navigate("/agency-form")}
             className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium shadow hover:bg-blue-700 transition"
           >
-            Agency Channel Form
+            Business Commitment For Today
           </button>
         </div>
       </div>
