@@ -114,7 +114,7 @@ const AgencyChannelForm = () => {
         className="w-full max-w-lg bg-white rounded-2xl shadow-xl p-8 space-y-5"
       >
         <h2 className="text-2xl font-bold text-gray-800 text-center">
-          Agency Channel Form
+          Business Commitment For Today
         </h2>
 
         {/* Employee Name */}
